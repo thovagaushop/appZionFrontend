@@ -1,0 +1,7 @@
+.group-input input{
+    width: 100px;
+}
+
+.group-input span {
+    padding: 5px;
+}
