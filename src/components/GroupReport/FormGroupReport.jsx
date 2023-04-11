@@ -8,9 +8,11 @@ import { BsCalendarDate} from "react-icons/bs";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSelector } from 'react-redux';
 
-const FormGroupReport = () => {
+const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
+
   const [dateReport, setDateReport] = useState(new Date());
   const user = useSelector((state) => state.authentication.user);
+  const token = useSelector((state) => state.authentication.token) || localStorage.getItem("token");
   const [formReportSubmit, setFormReportSubmit] = useState({
     "userId": 0,
     "date": "",
@@ -41,9 +43,15 @@ const FormGroupReport = () => {
       try {
         let res = await axios.post(
           `${process.env.REACT_APP_BASE_AXIOS_URL}/api/pastoralWork/groupReport`,
-          { ...formReportSubmit, date: moment(dateReport).format("YYYY-MM-DD"), userId: user.userId }
+          { ...formReportSubmit, date: moment(dateReport).format("YYYY-MM-DD"), userId: user.userId },
+          {
+            headers: {
+              "authorization": `Bearer ${token}`
+            }
+          }
         );
         console.log(res);
+        setIsUpdateData(!isUpdateData);
         clearInput();
         // await getReportByDate();
       } catch (error) {
@@ -66,7 +74,7 @@ const FormGroupReport = () => {
   }
 
   useEffect(() => {
-  }, [dateReport]);
+  }, []);
 
   return (
     <>

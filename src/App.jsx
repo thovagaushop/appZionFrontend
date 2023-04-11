@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
 import Login from "./components/Login";
@@ -15,15 +15,17 @@ import PrivateRouter from "./components/RouterComponent/PrivateRouter";
 
 function App() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const isLogged = (useSelector((state) => state.authentication.isLogged) || localStorage.getItem("isLogged"));
 
   const getUserByToken = async (token) => {
     if (token === "" || !token) dispatch(logout());
     else {
       let userByToken = await validateToken(token);
+      console.log(userByToken);
       if (!userByToken) {
         dispatch(logout());
+        navigate('/login');
       } else {
         dispatch(signIn({user: {userId: userByToken.payload.userId, userName: userByToken.payload.userName, role: userByToken.payload.role}, token: token}));
       }
