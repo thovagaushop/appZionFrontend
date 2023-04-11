@@ -12,13 +12,13 @@ import { useSelector } from "react-redux";
 
 const GroupReport = () => {
   const [isUpdateData, setIsUpdateData] = useState(false);
-  const [isDateHasData, setIsDateHasData] = useState(false);
 
   const [groupReports, setGroupReports] = useState([]);
+  const userId = localStorage.getItem("userId") || null;
   const token = useSelector((state) => state.authentication.token) || localStorage.getItem("token");
 
   const getListReportByUserId = async() => {
-    let result = await axios.get(`${process.env.REACT_APP_BASE_AXIOS_URL}/api/pastoralWork/groupReport`, {
+    let result = await axios.get(`${process.env.REACT_APP_BASE_AXIOS_URL}/api/pastoralWork/groupReport/${userId}`, {
       headers: {
         "authorization": `Bearer ${token}`
       }
@@ -33,7 +33,7 @@ const GroupReport = () => {
     <>
       <section className="content">
           <div className="container-fluid">
-            <SummaryResult />
+            <SummaryResult groupReports={groupReports}/>
             <FormGroupReport isUpdateData={isUpdateData} setIsUpdateData={setIsUpdateData} groupReports={groupReports}/>
             &nbsp;            
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FcManager } from "react-icons/fc";
 import { BsFillPersonLinesFill, BsBoxArrowInRight } from "react-icons/bs";
 import { AiOutlineLogin } from "react-icons/ai";
@@ -6,18 +6,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/auth/authenticationSlice";
 
-const Header = () => {
+const Header = ({userProp}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const isLogged = localStorage.getItem("isLogged");
-  const user = useSelector((state) => state.authentication.user);
+  const [user, setUser] = useState({});
+  const userStore = useSelector((state) => state.authentication.user);
 
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(logout());
     navigate("/login");
   };
+
+  useEffect(() => {
+    if(userProp) setUser(userProp);
+    else if (userStore) setUser(userStore); 
+  }, [userStore])
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-custom">
@@ -91,7 +97,7 @@ const Header = () => {
                     data-bs-toggle="dropdown"
                     aria-expanded="false" href="#!">
                   <FcManager className="profile-icon"/>
-                  <span className="user-name">Hello, </span>
+                  <span className="user-name">Hello, {user.userName}</span>
                 </a>
                   <ul
                     className="dropdown-menu dropdown-menu-lg-end"

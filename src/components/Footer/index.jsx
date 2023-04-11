@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <>
       {/* Footer */}
-      <footer className="text-center text-lg-start bg-white text-muted">
+      <footer className="text-center text-lg-start bg-white text-muted mt-auto">
         {/* Section: Social media */}
         <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
           {/* Right */}
@@ -23,7 +23,7 @@ const Footer = () => {
                   Company name
                 </h6>
                 <p>
-                  Here you can 
+                  Ba Dinh Zion
                 </p>
               </div>
               {/* Grid column */}
@@ -33,7 +33,7 @@ const Footer = () => {
                 <h6 className="text-uppercase fw-bold mb-4">Products</h6>
                 <p>
                   <a href="#!" className="text-reset">
-                    Angular
+                    React
                   </a>
                 </p>
               </div>
@@ -43,8 +43,8 @@ const Footer = () => {
                 {/* Links */}
                 <h6 className="text-uppercase fw-bold mb-4">Useful links</h6>
                 <p>
-                  <a href="#!" className="text-reset">
-                    Pricing
+                  <a href="https://watv.org" className="text-reset">
+                    WATV
                   </a>
                 </p>
               </div>
@@ -54,8 +54,7 @@ const Footer = () => {
                 {/* Links */}
                 <h6 className="text-uppercase fw-bold mb-4">Contact</h6>
                 <p>
-                  New York, NY
-                  10012, US
+                  Email: minhmeomeomun@gmail.com
                 </p>
               </div>
               {/* Grid column */}
@@ -69,9 +68,9 @@ const Footer = () => {
           className="text-center p-4"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.025)" }}
         >
-          © 2021 Copyright:
-          <a className="text-reset fw-bold" href="https://mdbootstrap.com/">
-            MDBootstrap.com
+          © 2023 Copyright: 
+          <a className="text-reset fw-bold" href="#!">
+            TXV Company
           </a>
         </div>
         {/* Copyright */}

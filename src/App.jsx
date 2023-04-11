@@ -12,11 +12,21 @@ import { useEffect, useState } from "react";
 import { logout, signIn } from "./redux/auth/authenticationSlice";
 import { validateToken } from "./services/authentication/jwt";
 import PrivateRouter from "./components/RouterComponent/PrivateRouter";
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isLogged = (useSelector((state) => state.authentication.isLogged) || localStorage.getItem("isLogged"));
+  const [user, setUser] = useState({});
+
+  const notify = () => toast.error('Phiên hoạt động kết thúc', {
+    duration: 4000,
+    style: {
+      width: "300px"
+    },
+    position: 'top-center',
+  });
 
   const getUserByToken = async (token) => {
     if (token === "" || !token) dispatch(logout());
@@ -24,9 +34,12 @@ function App() {
       let userByToken = await validateToken(token);
       console.log(userByToken);
       if (!userByToken) {
+        notify();
+        await new Promise(resolve => setTimeout(resolve, 1000));
         dispatch(logout());
         navigate('/login');
       } else {
+        setUser(userByToken.payload);
         dispatch(signIn({user: {userId: userByToken.payload.userId, userName: userByToken.payload.userName, role: userByToken.payload.role}, token: token}));
       }
     }
@@ -37,8 +50,8 @@ function App() {
   }, []);
 
   return (
-    <>
-      <Header />
+    <div className="d-flex flex-column min-vh-100">
+      <Header user={user}/>
       <div className="container">
         <Routes>
           <Route path="/" element={
@@ -58,7 +71,7 @@ function App() {
           <Route path="pastoralWork">
             <Route path="groupReport" element={
             <PrivateRouter isLogged={isLogged}>
-              <GroupReport /> 
+              <GroupReport user={user}/> 
             </PrivateRouter>
         } />
             <Route path="todayToDoList" element={
@@ -70,7 +83,8 @@ function App() {
         </Routes>
       </div>
       <Footer/>
-    </>
+      <Toaster/>
+    </div>
   );
 }
 

@@ -3,6 +3,7 @@ import { loginService } from "../../services/authentication/auth";
 import { useNavigate } from "react-router-dom";
 import { signIn } from "../../redux/auth/authenticationSlice";
 import { useDispatch } from "react-redux";
+import toast, { Toaster } from 'react-hot-toast';
 
 const FormLogin = () => {
     const navigate = useNavigate();
@@ -14,12 +15,32 @@ const FormLogin = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let resultLogin = await loginService(user);
-        console.log(resultLogin);
-        if (resultLogin) {
-            dispatch(signIn({user: resultLogin.user, token: resultLogin.accessToken}));
-            navigate("/home");
-        }
+        let resultLogin = loginService(user);
+        toast.promise(
+          resultLogin,
+          {
+            loading: 'Loading',
+            success: (data) => {
+              dispatch(signIn({user: data.user, token: data.accessToken}));
+              navigate("/home");
+              return `Login successfully`;
+            },
+            error: (err) => `${err.msg}`,
+          },
+          {
+            style: {
+              minWidth: '250px',
+            },
+            success: {
+              duration: 5000,
+              icon: '😍',
+            },
+            position: 'top-center',
+          }
+        );
+        // if (resultLogin.status === "success") {
+            
+        // }
     } 
 
   return (

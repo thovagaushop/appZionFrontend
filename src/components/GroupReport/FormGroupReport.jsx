@@ -3,15 +3,19 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import { BsCalendarDate} from "react-icons/bs";
+import { insertNewReport } from '../../services/groupReport/reportService';
 
 // Css
 import "react-datepicker/dist/react-datepicker.css";
 import { useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 
-const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
+const FormGroupReport = ({isUpdateData, setIsUpdateData, groupReports}) => {
 
+  // const [dateReport, setDateReport] = useState((new Date()).setDate((new Date()).getDate() + 1));
   const [dateReport, setDateReport] = useState(new Date());
-  const user = useSelector((state) => state.authentication.user);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const userId = localStorage.getItem("userId") || null;
   const token = useSelector((state) => state.authentication.token) || localStorage.getItem("token");
   const [formReportSubmit, setFormReportSubmit] = useState({
     "userId": 0,
@@ -26,38 +30,32 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
 
   const handeChangDate = (date) => {
     setDateReport(date);
+    disabledIfDateExistData(date)
+
   };
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
-    if (
-      formReportSubmit.dt === "" ||
-      formReportSubmit.hh === "" ||
-      formReportSubmit.bt === "" ||
-      formReportSubmit["1L"] === "" ||
-      formReportSubmit["4L"] === "" ||
-      formReportSubmit.menChi === ""
-    ) {
-      console.log("Fill All");
-    } else {
-      try {
-        let res = await axios.post(
-          `${process.env.REACT_APP_BASE_AXIOS_URL}/api/pastoralWork/groupReport`,
-          { ...formReportSubmit, date: moment(dateReport).format("YYYY-MM-DD"), userId: user.userId },
-          {
-            headers: {
-              "authorization": `Bearer ${token}`
-            }
-          }
-        );
-        console.log(res);
-        setIsUpdateData(!isUpdateData);
-        clearInput();
-        // await getReportByDate();
-      } catch (error) {
-        console.log(error);
+    let result = insertNewReport({ ...formReportSubmit, userId: userId, date: moment(dateReport).format("YYYY-MM-DD") }, token);
+    // Toast
+    toast.promise(
+      result,
+      {
+        loading: 'Loading',
+        success: (data) => {
+          setIsUpdateData(!isUpdateData);
+          return `Hoàn thành báo cáo hôm nay`;
+        },
+        error: (err) => `${err.msg}`,
+      },
+      {
+        style: {
+          minWidth: '250px',
+        },
+        position: 'top-center',
       }
-    }
+    );
+    clearInput();
   };
 
   const clearInput = () => {
@@ -73,8 +71,23 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
     })
   }
 
+  const disabledIfDateExistData = (date) => {
+    console.log(date);
+    if (groupReports.length) {
+      let result = groupReports.filter((el) => el.date === moment(date).format("YYYY-MM-DD"));
+      if (result.length) {
+        console.log("co r");
+        setIsDisabled(true)
+      } else {
+        setIsDisabled(false)
+      }
+    }
+  };
+
   useEffect(() => {
-  }, []);
+    console.log(groupReports);
+    disabledIfDateExistData(dateReport);
+  }, [dateReport, groupReports]);
 
   return (
     <>
@@ -147,11 +160,11 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
                                     };
                                   });
                                 }}
-                                value={formReportSubmit.dt}
+                                value={formReportSubmit.dt.toString()}
                                 required
-                                // disabled={
-                                //   groupReport.dt !== "" ? "disabled" : ""
-                                // }
+                                disabled={
+                                  isDisabled ? "disabled" : ""
+                                }
                               />
                             </div>
                             <div className="col-2 group-report-input">
@@ -168,11 +181,11 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
                                     };
                                   });
                                 }}
-                                value={formReportSubmit.hh}
+                                value={formReportSubmit.hh.toString()}
                                 required
-                                // disabled={
-                                //   groupReport.dt !== "" ? "disabled" : ""
-                                // }
+                                disabled={
+                                  isDisabled ? "disabled" : ""
+                                }
                               />
                             </div>
                             <div className="col-2 group-report-input">
@@ -189,11 +202,11 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
                                     };
                                   });
                                 }}
-                                value={formReportSubmit.bt}
+                                value={formReportSubmit.bt.toString()}
                                 required
-                                // disabled={
-                                //   groupReport.dt !== "" ? "disabled" : ""
-                                // }
+                                disabled={
+                                  isDisabled ? "disabled" : ""
+                                }
                               />
                             </div>
                             <div className="col-2 group-report-input">
@@ -210,11 +223,11 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
                                     };
                                   });
                                 }}
-                                value={formReportSubmit["1L"]}
+                                value={formReportSubmit["1L"].toString()}
                                 required
-                                // disabled={
-                                //   groupReport.dt !== "" ? "disabled" : ""
-                                // }
+                                disabled={
+                                  isDisabled ? "disabled" : ""
+                                }
                               />
                             </div>
                             <div className="col-2 group-report-input">
@@ -231,11 +244,11 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
                                     };
                                   });
                                 }}
-                                value={formReportSubmit["4L"]}
+                                value={formReportSubmit["4L"].toString()}
                                 required
-                                // disabled={
-                                //   groupReport.dt !== "" ? "disabled" : ""
-                                // }
+                                disabled={
+                                  isDisabled ? "disabled" : ""
+                                }
                               />
                             </div>
                             <div className="col-2 group-report-input">
@@ -252,11 +265,11 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
                                     };
                                   });
                                 }}
-                                value={formReportSubmit.menChi}
+                                value={formReportSubmit.menChi.toString()}
                                 required
-                                // disabled={
-                                //   groupReport.dt !== "" ? "disabled" : ""
-                                // }
+                                disabled={
+                                  isDisabled ? "disabled" : ""
+                                }
                               />
                             </div>
                           </div>
@@ -266,7 +279,9 @@ const FormGroupReport = ({isUpdateData, setIsUpdateData}) => {
                           <button
                             type="submit"
                             className="btn btn-danger"
-                            // disabled={groupReport.dt !== "" ? "disabled" : ""}
+                            disabled={
+                              isDisabled ? "disabled" : ""
+                            }
                           >
                             Báo cáo
                           </button>
