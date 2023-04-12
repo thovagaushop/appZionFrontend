@@ -13,6 +13,7 @@ import { logout, signIn } from "./redux/auth/authenticationSlice";
 import { validateToken } from "./services/authentication/jwt";
 import PrivateRouter from "./components/RouterComponent/PrivateRouter";
 import toast, { Toaster } from 'react-hot-toast';
+import AdminDashboard from "./components/Admin/Dashboard";
 
 function App() {
   const dispatch = useDispatch();
@@ -79,6 +80,10 @@ function App() {
               <TodayTodoList /> 
             </PrivateRouter>
         } />
+          </Route>
+
+          <Route path="admin">
+              <Route path="dashboard" element={<AdminDashboard/>}/>
           </Route>
         </Routes>
       </div>

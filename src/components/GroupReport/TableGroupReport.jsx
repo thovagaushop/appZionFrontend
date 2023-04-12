@@ -40,7 +40,7 @@ const TableGroupReport = ({groupReports}) => {
             </div>
 
             {/* Card Body */}
-            <div className="card-body">
+            <div className="card-body" style={{height: "100%"}}>
               <div className="col">
                 <div className="card">
                   <div className="card-header">
@@ -49,7 +49,7 @@ const TableGroupReport = ({groupReports}) => {
                     </h3>
                   </div>
                   {/* /.card-header */}
-                  <div className="card-body p-0">
+                  <div className="card-body p-0 table-wrapper">
                     <table className="table">
                       <thead>
                         <tr>

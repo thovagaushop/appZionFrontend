@@ -13,9 +13,8 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="row  d-flex flex-column align-items-center">
-          <div className="banner-img"><img alt="Banner" src="/banner.jpg"/></div>
-          
+        <div className="row d-flex flex-column align-items-center">
+          <div className="banner-img text-center d-flex flex-coloumn justify-content-center"><img alt="Banner" src="/whale.png"/></div>
         </div>
       </div>
     </section>
